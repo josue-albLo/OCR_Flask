@@ -1,0 +1,115 @@
+{% extends "base.html" %} 
+{% block title %}loadfile{% endblock %} 
+{% block content %}
+<h4>Cargar documentos de recibo de luz con formato .png, .jpg y pdf</h4>
+
+<section class="load-file">
+  <form method="POST" enctype="multipart/form-data" action="/upload">
+    <input id="file" type="file" name="myfile" accept=".pdf,.jpg,.png" />
+    <button id="openModal" class="btn button-search" type="submit">
+      Cargar recibo
+    </button>
+  </form>
+</section>
+{% with errors = get_flashed_messages(category_filter=["error"]) %}
+{% if errors %}
+<div class="alert alert-danger">
+    {% for msg in errors %}
+    <strong>¡Error!</strong> {{ msg }}
+    {% endfor -%}
+</div>
+{% endif %}
+{% endwith %}
+    
+    {% if context %}
+    <section id="mymodal" class="send-form modal">
+        <form class="form" id="data-to-save" method="POST" action="/database/save">
+          <div class="form-group-elements">
+            <div class="group-form">
+              <label for="nis">NIS</label>
+            <input class="input"
+              type="text"
+              name="nis"
+              id="nis"
+              value="{{context.data['nis']}}"
+              readonly
+            />
+            </div>
+            <div class="group-form">
+              <label for="date_issue">Fecha de emision</label>
+            <input class="input"
+              type="text"
+              name="date_issue"
+              id="date_issue"
+              value="{{context.data['date_issue']}}"
+              readonly
+            />
+            </div>
+          </div>
+          <div class="form-group-elements">
+            <div class="group-form">
+              <label for="start_period">Fecha de inicio</label>
+            <input class="input"
+              type="text"
+              name="start_period"
+              id="start_period"
+              value="{{context.data['start_period']}}"
+              readonly
+            />
+            </div>
+           <div class="group-form">
+            <label for="end_period">Fecha de fin</label>
+            <input class="input"
+              type="text"
+              name="end_period"
+              id="end_period"
+              value="{{context.data['end_period']}}"
+              readonly
+            />
+           </div>
+          </div>
+          <div class="form-group-elements">
+            <div class="group-form">
+              <label for="consumption_kwh">Consumo de KWh</label>
+            <input class="input"
+              type="text"
+              name="consumption_kwh"
+              id="consumption_kwh"
+              value="{{context.data['consumption_kwh']}}"
+              readonly
+            />
+            </div>
+            
+           <div class="group-form">
+            <label for="total_pay">Total a pagar</label>
+            <input class="input"
+              type="text"
+              name="total_pay"
+              id="total_pay"
+              value="{{context.data['total_pay']}}"
+              readonly
+            />
+           </div>
+          </div>
+         
+          <input
+            type="text"
+            name="file_name"
+            id="file_name"
+            value="{{context.data['file_name']}}"
+            hidden
+            readonly
+          />
+        </div>
+        <div class="group-buttons">
+          <button class="btn button-success" type="submit">Guardar</button>
+          <button class="btn button-cancel" onclick="clearInfo()" id="clean-info">Cancelar</button>
+        </div>
+      </form>
+    </section>
+      {% endif %}
+{% block scriptsjs %}
+<script src="../static/js/database.js"></script>
+{% endblock %}
+
+{% endblock %}

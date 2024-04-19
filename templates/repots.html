@@ -1,0 +1,15 @@
+{% extends "base.html" %} 
+{% block title %}reports{% endblock %} 
+{% block content %}
+<h1>Proximamente... </h1>
+{% with errors = get_flashed_messages(category_filter=["error"]) %}
+{% if errors %}
+<div class="alert alert-danger">
+    {% for msg in errors %}
+    <strong>¡Error!</strong> {{ msg }}
+    {% endfor -%}
+</div>
+{% endif %}
+{% endwith %}
+{% endblock %}
+    

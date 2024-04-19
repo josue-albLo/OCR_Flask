@@ -1,0 +1,478 @@
+:root {
+  font-family: "Open Sans", sans-serif;
+  --color-primary: #ff6200;
+  --color-text-white: #f9f9f9;
+  --color-bg-dark: #1e1e1e;
+  --color-bg-light: #f9f9f9;
+  --color-text-dark: #333;
+  --color-info: #0c43a0;
+  --color-success: #0a7d0a;
+  --color-danger: #ff0000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background: var(--color-text-white);
+  display: flex;
+}
+
+header {
+  float: left;
+  width: 250px;
+  background-color: #1b1b6e;
+  color: var(--color-text-white);
+  padding: 10px;
+  height: 100vh;
+}
+
+header nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+header nav ul li {
+  border: 1px solid #f9f9f9;
+  border-radius: 5px;
+  padding: 10px;
+  text-align: center;
+}
+
+header nav ul li:hover {
+  background-color: #0a0f55;
+  transition: all 0.3s ease-in-out;
+}
+
+header nav ul li a {
+  color: var(--color-text-white);
+  text-decoration: none;
+  font-size: 18px;
+}
+
+header nav ul li a:hover {
+  transition: all 0.3s ease-in-out;
+  text-decoration: underline 2px;
+}
+
+.container {
+  margin-top: 30px;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.users-table {
+  background-color: var(--color-bg-light);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.table-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 20px;
+  right: 0;
+}
+
+.table-content .users-table th {
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.table-content .users-table thead {
+  background-color: var(--color-primary);
+  color: var(--color-text-white);
+}
+
+.users-table tbody {
+  padding: 2px;
+  background-color: #f9f9f9;
+}
+
+.search-option {
+  width: calc(100% - 20px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin: 10px;
+  padding: 5px;
+}
+.btn {
+  border-radius: 10px;
+  border: none;
+  color: white;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  padding: 8px 15px;
+}
+
+.button-info {
+  color: var(--color-info);
+}
+
+.button-info:hover {
+  background: var(--color-info);
+  color: var(--color-text-white);
+  transition: all 0.3s ease-in-out;
+}
+
+.button-del {
+  color: var(--color-danger);
+}
+
+.button-del:hover {
+  background: var(--color-danger);
+  color: var(--color-bg-light);
+  transition: all 0.3s ease-in-out;
+}
+
+.button-search {
+  background-color: #141d9f;
+}
+
+.search-option p {
+  margin: 0;
+}
+
+.button-search:hover {
+  background-color: #1b1b6e;
+}
+
+.buttons-action {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.load-file {
+  display: flex;
+  justify-content: center;
+  align-self: calc(100% - 20px);
+}
+
+.load-file form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+input[type="number"] {
+  width: 150px;
+  padding: 5px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.group-elements {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.section-table {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.group-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.form {
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.form-group-elements {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+/* Estilos para etiquetas */
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+/* Estilos para inputs */
+input[type="text"] {
+  width: calc(100% - 10px);
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.input {
+  border: 2px solid transparent;
+  width: 15em;
+  height: 2.5em;
+  padding-left: 0.8em;
+  outline: none;
+  overflow: hidden;
+  background-color: #f3f3f3;
+  border-radius: 10px;
+  transition: all 0.5s;
+}
+
+.input:hover,
+.input:focus {
+  border: 2px solid #4a9dec;
+  box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
+  background-color: white;
+}
+
+#data-to-save {
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos para botones */
+.group-buttons {
+  display: flex;
+  text-align: center;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.button-success {
+  background-color: #4caf50;
+  transition: background-color 0.3s ease;
+}
+
+.button-success:hover {
+  background-color: #45a049;
+}
+
+.button-cancel {
+  background-color: #f44336;
+  transition: background-color 0.3s ease;
+}
+
+.button-cancel:hover {
+  background-color: #d32f2f;
+}
+
+/* Estilos generales del contenedor de usuario */
+.user-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Estilos de la tarjeta */
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 800px;
+  margin-bottom: 10px;
+  flex-direction: row;
+}
+
+/* Estilos del lado izquierdo de la tarjeta */
+.left-side {
+  margin-right: 20px;
+  line-height: 1.6rem;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+}
+
+.left-side p {
+  margin-bottom: 10px;
+}
+
+.left-side p span {
+  font-weight: bold;
+}
+
+/* Estilos de la figura en el lado derecho de la tarjeta */
+.right-side {
+  flex-grow: 1;
+}
+
+.right-side img {
+  width: 250px;
+  height: 400px;
+  border-radius: 8px;
+}
+
+.button-back {
+  border: 1px solid var(--color-success);
+  color: var(--color-success);
+  transition: background-color 0.3s ease;
+}
+
+.button-back a {
+  text-decoration: none;
+  color: var(--color-success);
+}
+
+.button-back a:hover {
+  color: var(--color-bg-light);
+}
+
+.button-back:hover {
+  background-color: var(--color-success);
+}
+
+button a {
+  color: #fff;
+  text-decoration: none;
+}
+/* Estilos para el modal */
+.modal {
+  padding-top: 100px;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #dc3545;
+  color: #dc3545;
+}
+
+h1 {
+  color: var(--color-primary);
+  font-size: 40px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+h4 {
+  color: var(--color-bg-dark);
+  font-size: 25px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+p {
+  font-size: 16px;
+  line-height: 1.6;
+  margin: 20px auto;
+  width: 80%;
+  text-align: justify;
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: #ccc;
+  margin-bottom: 20px;
+}
+
+.logout-btn {
+  background-color: #dc3545; /* Color de fondo */
+  color: #fff; /* Color del texto */
+  padding: 10px 20px; /* Espacio interior */
+  border: none; /* Sin borde */
+  border-radius: 5px; /* Bordes redondeados */
+  text-decoration: none; /* Quitar subrayado */
+  display: inline-block; /* Mostrar como bloque en línea */
+  transition: background-color 0.3s; /* Transición de color de fondo */
+}
+
+.logout-btn:hover {
+  background-color: #c82333; /* Cambiar color de fondo al pasar el ratón */
+}
+
+.logout-btn a {
+  color: inherit; /* Heredar color del botón */
+  text-decoration: none; /* Quitar subrayado */
+}
+
+.div-logout{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 40px;
+}
+
+.download {
+  background: var(--color-info);
+}
+
+.download:hover {
+  background-color: #0056b3; /* Cambiar color de fondo al pasar el ratón */
+}
+
+

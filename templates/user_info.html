@@ -1,0 +1,34 @@
+{% extends "base.html" %} {% block title %}Info{% endblock %} {% block content
+%}
+<section class="user-container">
+  <article class="card">
+    <div class="left-side">
+      <p>NIS: <span>{{context.nis}}</span></p>
+      <p>Fecha de emision: <span>{{context.date_issue}}</span></p>
+      <p>Consumo en Kwh: <span>{{context.consumption_kwh}}</span></p>
+      <p>Periodo de inicio: <span>{{context.start_period}}</span></p>
+      <p>Periodo de fin: <span>{{context.end_period}}</span></p>
+      <p>Total a pagar: <span>Q.{{context.total_pay}}</span></p>
+    </div>
+    <figure class="right-side">
+      <img src="/mostrar_imagen_temporal" alt="{{context.nis}}" />
+    </figure>
+  </article>
+  {% with errors = get_flashed_messages(category_filter=["error"]) %}
+{% if errors %}
+<div class="alert alert-danger">
+    {% for msg in errors %}
+    <strong>¡Error!</strong> {{ msg }}
+    {% endfor -%}
+</div>
+{% endif %}
+{% endwith %}
+<div class="group-buttons">
+  <button class="btn button-back"><a href="/search">Regresar</a></button>
+  <button class="btn download"><a  href="/mostrar_imagen_temporal" download>Descargar</a></button>
+  
+</div>
+  
+</section>
+
+{% endblock %}

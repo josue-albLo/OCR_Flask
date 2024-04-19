@@ -1,0 +1,67 @@
+{% extends "base.html" %} {% block title %}search{% endblock %} {% block content
+%}
+
+<section class="table-content">
+  <section class="search-option">
+    <form method="POST" action="/search/user">
+      <input placeholder="Nis ej: 0000000" class="input" id="search" type="number" name="search" />
+      <button class="btn button-search" type="submit">Buscar</button>
+    </form>
+  </section>
+  {% with errors = get_flashed_messages(category_filter=["error"]) %}
+{% if errors %}
+<div class="alert alert-danger">
+    {% for msg in errors %}
+    <strong>¡Error!</strong> {{ msg }}
+    {% endfor -%}
+</div>
+{% endif %}
+{% endwith %}
+  {% if context.users  %}
+  <table class="users-table">
+    <caption>
+      <h2>Últimos registros</h2>
+    </caption>
+    <thead>
+      <tr class="table-header">
+        <th class="">No.</th>
+        <th class="">NIS</th>
+        <th class="">Fecha de emisi&oacute;n</th>
+        <th class="">Consumo de KWh</th>
+        <th class="">Fecha de inicio</th>
+        <th class="">Fecha de fin</th>
+        <th class="">Total a pagar</th>
+        <th class="">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in context.users %}
+      <tr>
+        <td>{{1}}</td>
+        <td>{{user.nis}}</td>
+        <td>{{user.date_issue}}</td>
+        <td>{{user.consumption_kwh}}</td>
+        <td>{{user.start_period}}</td>
+        <td>{{user.end_period}}</td>
+        <td>{{user.total_pay}}</td>
+        <td class="buttons-action">
+          <form action="user/info/{{user.nis}}/{{user.start_period.replace('/','-')}}/{{user.end_period.replace('/','-')}}" method="POST">
+            <button class="btn button-info" type="submit">Ver</button>
+          </form>
+          <form action="user/delete/{{user.nis}}/{{user.start_period.replace('/','-')}}/{{user.end_period.replace('/','-')}}" method="POST">
+            <button class="btn button-del" type="submit">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+  {% else %}
+  <p>No hay registros</p>
+  {% endif %}
+
+{% block scriptsjs %}
+<script src="../static/js/database.js"></script>
+{% endblock %} {% endblock %}
