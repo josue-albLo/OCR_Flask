@@ -86,7 +86,7 @@ def index():
         all_users = connection.getAllUsers()
     all_years = set(connection.get_all_years())
     all_years = sorted(all_years)
-    all_years = current_year in all_years if all_years.remove(current_year) else all_years
+    all_years = current_year in all_years and len(all_years) ==1 if all_years.remove(current_year) else all_years
     
     if not all_users:
         flash("No users found", "error")
@@ -319,7 +319,7 @@ def search():
     year = year.strip() if year else current_year
     all_years = set(connection.get_all_years())
     all_years = sorted(all_years)
-    all_years = current_year in all_years if all_years.remove(current_year) else all_years
+    all_years = current_year in all_years and len(all_years) ==1 if all_years.remove(current_year) else all_years
     
     users = connection.getAllUsers(year=year)
     if not users:
