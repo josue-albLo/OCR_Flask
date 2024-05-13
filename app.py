@@ -21,7 +21,6 @@ from functools import wraps
 import pandas as pd
 from flask_cors import CORS
 import time
-from threading import Timer
 
 app = Flask(__name__)
 CORS(app)
@@ -77,11 +76,18 @@ def logout():
 @app.route("/index")
 @login_required
 def index():
-    all_users = connection.getAllUsers()
-    all_years = connection.get_all_years()
-    if not all_years:
-        print("No years found")
-    print('All years: ', all_years)
+    current_year = time.localtime().tm_year
+    year = request.args.get("year")
+    year = year.strip() if year else current_year
+     
+    if year:
+        all_users = connection.getAllUsers(year=year)
+    else:
+        all_users = connection.getAllUsers()
+    all_years = set(connection.get_all_years())
+    all_years = sorted(all_years)
+    all_years = current_year in all_years if all_years.remove(current_year) else all_years
+    
     if not all_users:
         flash("No users found", "error")
         return render_template("index.html", context={"users": []})
@@ -89,7 +95,7 @@ def index():
     # Convert to json
     all_users = [dict(user) for user in all_users]
 
-    return render_template("index.html", context={"users": all_users})
+    return render_template("index.html", context={"users": all_users, "years": all_years})
 
 
 path_name_to_extract = None
@@ -113,7 +119,6 @@ def upload_file():
             session["array_data"] = data_from_files
             return redirect(url_for("load_file"))
         else:
-            print("Uploaded file: ", uploaded_file.filename)
 
             if uploaded_file.filename != None:
                 name_file, extension = os.path.splitext(uploaded_file.filename)
@@ -229,7 +234,6 @@ def delete_user(id, start_period, end_period):
 )
 @login_required
 def user_info(id, start_period, end_period):
-    print(f"ID: {id}, Start: {start_period}, End: {end_period}")
     start_period = start_period.replace("-", "/")
     end_period = end_period.replace("-", "/")
     cleanup_file("temp_image.png")
@@ -309,16 +313,25 @@ def search_user():
 @app.route("/search", methods=["GET"])
 @login_required
 def search():
-    users = connection.getAllUsers()
-
-    for user in users:
-        user["total_pay"] = f"{float(user['total_pay']):,.2f}"
-        user["consumption_kwh"] = f"{float(user['consumption_kwh']):,.2f}"
-
+    
+    year = request.args.get("year")
+    current_year = time.localtime().tm_year
+    year = year.strip() if year else current_year
+    all_years = set(connection.get_all_years())
+    all_years = sorted(all_years)
+    all_years = current_year in all_years if all_years.remove(current_year) else all_years
+    
+    users = connection.getAllUsers(year=year)
     if not users:
         flash("No users found", "error")
         return render_template("search.html", context={"users": []})
-    return render_template("search.html", context={"users": users})
+    
+    for user in users:
+        user["total_pay"] = f"{float(user['total_pay']):,.2f}"
+        user["consumption_kwh"] = f"{float(user['consumption_kwh']):,.2f}"
+    
+  
+    return render_template("search.html", context={"users": users, "years": all_years})
 
 
 @app.route("/reports", methods=["GET"])
@@ -369,7 +382,6 @@ def load_file():
     data = session.get("data", None)
     array_data = session.get("array_data", None)
     if array_data:
-        print("Data from session: ", array_data)
         new_data = copy.copy(array_data)
         session.pop("array_data", None)
         return render_template(
@@ -377,7 +389,7 @@ def load_file():
         )
 
     if data:
-        print("Data from session: ", data)
+        
         new_data = copy.copy(data)
         session.pop("data", None)
         return render_template(
@@ -390,7 +402,6 @@ def load_file():
 @app.route("/load/one/file", methods=["POST"])
 def load_one_file():
     data = request.json
-    print("Data from request: ", data)
     if not data:
         return jsonify("no_data_privide"), 400
 
@@ -542,7 +553,6 @@ def cleanup_file(filename):
     file_path = os.path.join("uploads", filename)
     if os.path.exists(file_path):
         os.remove(file_path)
-        print(f"Deleted file: {file_path}")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True, use_reloader=True)

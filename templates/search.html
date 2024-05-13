@@ -37,11 +37,20 @@
           required
         />
       </div>
-      <div class="search-btn"><button class="btn button-search" type="submit">Buscar</button></div>
+      <div class="search-btn">
+        <button class="btn button-search" type="submit">Buscar</button>
+      </div>
     </form>
   </section>
-  {% with errors = get_flashed_messages(category_filter=["error"]) %} {% if
-  errors %}
+
+  {% if context.years %}
+  <div class="filter">
+    {% for year in context.years %}
+    <a class="styled-link" href="/search?year={{year}}">{{year}}</a>
+    {% endfor %}
+  </div>
+  {% endif %} {% with errors = get_flashed_messages(category_filter=["error"])
+  %} {% if errors %}
   <div class="alert alert-danger">
     {% for msg in errors %}
     <strong>¡Error!</strong> {{ msg }} {% endfor -%}

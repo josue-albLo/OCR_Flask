@@ -637,3 +637,27 @@ canvas {
   margin-top: 20px;
 }
 
+/* Estilo básico para el link */
+.filter{
+  margin: 20px 0 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.styled-link {
+  text-decoration: none; /* Elimina el subrayado */
+  color: #4A90E2; /* Color azul claro para el texto */
+  font-weight: bold; /* Hace el texto más grueso */
+  padding: 8px 16px; /* Añade padding para hacerlo más grande */
+  border: 2px solid #4A90E2; /* Borde del mismo color */
+  border-radius: 8px; /* Bordes redondeados */
+  transition: all 0.3s ease; /* Transición suave para los cambios de estilo */
+  font-family: Arial, sans-serif; /* Fuente más moderna y limpia */
+}
+
+/* Estilo para el hover */
+.styled-link:hover {
+  background-color: #4A90E2; /* Fondo azul cuando se pasa el mouse por encima */
+  color: white; /* Texto blanco para contrastar con el fondo */
+  text-decoration: none; /* Asegura que no haya subrayado */
+}

@@ -2,7 +2,7 @@
 %}
 
 <h1>TechDocAdvantage PRO</h1>
-<hr>
+<hr />
 <p class="welcome">
   ¡Bienvenido a tu panel de administración de consumo energético! Aquí
   encontrarás gráficas avanzadas para una gestión eficaz de tus recibos de luz.
@@ -15,24 +15,28 @@
 </p>
 
 <h1>Gráficos</h1>
+{% if context.years %}
+<div class="filter">
+  {% for year in context.years %}
+  <a class="styled-link" href="/index?year={{year}}">{{year}}</a>
+  {% endfor %}
+</div>
+{% endif %} 
+
 {% if context.users %}
 <div class="graficas">
   <div><canvas id="graficoConsumo"></canvas></div>
   <div><canvas id="graficoPago"></canvas></div>
   <div><canvas id="graficoMaxPago"></canvas></div>
 </div>
-{% else %}
-{% with errors = get_flashed_messages(category_filter=["error"]) %} {% if
-  errors %}
-  <div class="alert alert-danger">
-    {% for msg in errors %}
-    <strong>¡Error!</strong> {{ msg }} {% endfor -%}
-  </div>
+{% else %} {% with errors = get_flashed_messages(category_filter=["error"]) %}
+{% if errors %}
+<div class="alert alert-danger">
+  {% for msg in errors %}
+  <strong>¡Error!</strong> {{ msg }} {% endfor -%}
+</div>
 
-  {% endif %} {% endwith %}
-{% endif %}
-
-{% endblock %} {% block scriptsjs %}
+{% endif %} {% endwith %} {% endif %} {% endblock %} {% block scriptsjs %}
 <script>
   // Pasar los registros a JavaScript
   var registros = {{ context.users| tojson| safe}};
