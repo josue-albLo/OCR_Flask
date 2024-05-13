@@ -1,11 +1,18 @@
-const modal = document.getElementById("mymodal");
-const btn = document.getElementById("openModal");
+var modal = document.getElementById("mymodal") || null;
+var btn = document.getElementById("openModal") || null;
+var btnOneFile = document.getElementById("multiple").textContent || null;
+
 
 btn.onclick = function () {
   modal.style.display = "block";
   
 };
 
+window.onload = function() {
+  if (contex.data != 1) {
+      document.getElementById('mymodal').style.display = 'none';
+  }
+};
 
 window.onclick = function (event) {
   if (event.target == modal) {
@@ -24,4 +31,3 @@ function clearInfo() {
   inputFile.value = "";
   modal.style.display = "none";
 }
-

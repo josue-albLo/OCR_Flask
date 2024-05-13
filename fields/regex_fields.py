@@ -16,24 +16,24 @@ def get_important_fields(text) -> dict[str, str]:
     reading_period_match = re.search(periodo_lectura, text)
     total_match = re.search(pagar, text)
 
-    nit = nit_match.group(1) if nit_match else "NIS no encontrado"
-    date = date_match.group(1) if date_match else "Fecha no encontrada"
+    nit = nit_match.group(1) if nit_match else None
+    date = date_match.group(1) if date_match else None
     consumption = (
-        consumption_match.group(1) if consumption_match else "Consumo no encontrado"
+        consumption_match.group(1) if consumption_match else None
     )
     reading_period = (
         reading_period_match.group(1)
         if reading_period_match
-        else "Periodo de lectura no encontrado"
+        else None
     )
 
     end_period = (
         reading_period_match.group(2)
         if reading_period_match
-        else "Periodo de lectura no encontrado"
+        else None
     )
 
-    total = total_match.group(1) if total_match else "Total no encontrado"
+    total = total_match.group(1) if total_match else None
 
     return {
         "nis": nit,

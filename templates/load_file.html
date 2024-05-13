@@ -1,27 +1,33 @@
 {% extends "base.html" %} 
 {% block title %}loadfile{% endblock %} 
 {% block content %}
-<h4>Cargar documentos de recibo de luz con formato .png, .jpg y pdf</h4>
+<h1>Cargar documentos de recibo de luz con formato .png, .jpg y pdf</h1>
 
 <section class="load-file">
   <form method="POST" enctype="multipart/form-data" action="/upload">
-    <input id="file" type="file" name="myfile" accept=".pdf,.jpg,.png" />
-    <button id="openModal" class="btn button-search" type="submit">
-      Cargar recibo
-    </button>
+      <!-- Input para seleccionar archivos -->
+      <input id="file" type="file" name="myfile" accept=".pdf,.jpg,.png" />
+      <!-- Botón para cambiar entre cargar un archivo o cargar un lote -->
+      <button id="multiple" type="button" onclick="toggleBatchMode()" class="btn button-primary">Cargar varios archivos</button>
+      <!-- Botón para enviar el formulario -->
+      <button id="openModal" class="btn button-search" type="submit">
+          Cargar recibo
+      </button>
   </form>
 </section>
 {% with errors = get_flashed_messages(category_filter=["error"]) %}
 {% if errors %}
-<div class="alert alert-danger">
+
     {% for msg in errors %}
+    <div class="alert alert-danger">
     <strong>¡Error!</strong> {{ msg }}
+    </div>
     {% endfor -%}
-</div>
+
 {% endif %}
 {% endwith %}
-    
     {% if context %}
+    {%  if context.data %}
     <section id="mymodal" class="send-form modal">
         <form class="form" id="data-to-save" method="POST" action="/database/save">
           <div class="form-group-elements">
@@ -107,9 +113,28 @@
         </div>
       </form>
     </section>
-      {% endif %}
-{% block scriptsjs %}
-<script src="../static/js/database.js"></script>
-{% endblock %}
+    {% elif context.array_data %}
+    <div id="user-container">
+      <!-- Los usuarios se insertarán aquí -->
+    </div>
+  {% endif %}
+    
+  {% endif %}
+  <div id="alert-container" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1000; background-color: rgba(0,0,0,0.5); text-align: center; border-radius: 5px; padding: 10px; max-width: 90%; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin: 10px;">
+    <!-- Mensajes se insertarán aquí -->
+</div>
 
+
+  
+  {% block scriptsjs %}
+    <script src="{{ url_for('static', filename='js/database.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/load_multipleF.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/forms.js') }}"></script>
+
+    <script>
+        var data_context = {{ context | tojson }} || {};
+    </script>
+  
+
+  {% endblock %}
 {% endblock %}

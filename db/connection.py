@@ -7,8 +7,7 @@ from PIL import Image
 import cv2
 import numpy as np
 
-
-uri = "add your uri here"
+uri = "mongodb+srv://guevarajosue637:v8FzPfzWkj5a7Pnj@tigerocr.z8x5i0u.mongodb.net/?retryWrites=true&w=majority&appName=TigerOCR"
 
 client = MongoClient(
     uri, server_api=ServerApi("1"), tls=True, tlsAllowInvalidCertificates=True
@@ -72,7 +71,7 @@ def verify_date_start_and_end_period(nis: str, start_period: str, end_period: st
         return None
 
 
-def getImage(filename, start_period, end_period)-> Image.Image | None:
+def getImage(filename, start_period, end_period) -> Image.Image | None:
     db = client["TigerOCR"]
     collection = db["images"]
     fs = gridfs.GridFS(db)
@@ -102,7 +101,6 @@ def getImage(filename, start_period, end_period)-> Image.Image | None:
         max_pixels = 178956970  # Límite de Pillow para evitar ataques de DOS
         if len(image_bytes) > max_pixels:
             image_bytes = image_bytes[:max_pixels]
-            
 
         image = Image.open(BytesIO(base64.b64decode(image_bytes)))
 
@@ -115,13 +113,15 @@ def getImage(filename, start_period, end_period)-> Image.Image | None:
         return None
 
 
-
-
-def getAllUsers() -> list[dict[str, str]]:
+def getAllUsers(year: str = "2024"):
     db = client["TigerOCR"]
     collection = db["users"]
     try:
-        res = collection.find({}, {"_id": 0})
+        # Crear una regex que coincida con cualquier fecha que tenga el año especificado
+        year_regex = f"/{year}"
+        # Buscar usuarios cuyo 'start_period' contenga el año deseado
+        query = {"start_period": {"$regex": year_regex}}
+        res = collection.find(query, {"_id": 0})
         return [user for user in res]
     except Exception as e:
         print(e)
@@ -169,7 +169,7 @@ def get_image_by_nis(nis: str):
         return None
 
 
-def get_user_by_nis(nis: str, start_period: str, end_period: str):
+def get_user_by_nis(nis: str, start_period: str = "0", end_period: str = "0"):
     db = client["TigerOCR"]
     collection = db["users"]
     try:
@@ -182,5 +182,42 @@ def get_user_by_nis(nis: str, start_period: str, end_period: str):
         print(e)
         return None
 
-def create_user_login():
-    pass
+
+def get_user_login(username: str, password: str):
+    db = client["TigerOCR"]
+    collection = db["users_account"]
+    try:
+        user = collection.find_one({"username": username, "password": password})
+        return user
+    except Exception as e:
+        print(e)
+        return None
+
+
+def get_all_years():
+    db = client["TigerOCR"]
+    collection = db["users"]
+    try:
+        pipeline = [
+            {
+                "$project": {
+                    "year": {
+                        "$arrayElemAt": [
+                            {"$split": ["$start_period", "/"]},
+                            2,  # Índice del año en el formato DD/MM/YYYY
+                        ]
+                    }
+                }
+            },
+            {"$group": {"_id": "$year"}},
+            {"$sort": {"_id": 1}},  # Opcional, ordena los años
+        ]
+        years = list(collection.aggregate(pipeline))
+        # Extraer solo los años desde los resultados de la agregación
+        years = [
+            int(year["_id"]) for year in years if year["_id"].isdigit()
+        ]  # Convertir a int, verificar si es dígito
+        return years
+    except Exception as e:
+        print(e)
+        return None

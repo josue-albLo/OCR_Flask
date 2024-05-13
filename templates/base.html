@@ -8,28 +8,35 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
     />
+
     <link
       rel="stylesheet"
       href="{{url_for('static', filename='styles.css')}}"
     />
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <title>{% block title %}{% endblock %}</title>
   </head>
   <body>
     <header>
       <nav>
         <ul>
-          <li><a href="/">Dashboard</a></li>
+          <li><a href="/index">Dashboard</a></li>
           <li><a href="/loadfile">Cargar Archivo</a></li>
           <li><a href="/search">Ver registros</a></li>
           <li><a href="/reports">Reportes</a></li>
         </ul>
       </nav>
     </header>
-    <main class="container"> <div class="div-logout"><button class="logout-btn"><a href="/login">Cerrar sesión</a></button></div>
-      {% block content %}{% endblock %}</main>
+    <main class="container">
+      <div class="div-logout">
+        <button class="logout-btn"><a href="/logout">Cerrar sesión</a></button>
+      </div>
+      {% block content %}{% endblock %}
+    </main>
     <footer></footer>
     {% block scriptsjs %}{% endblock %}
   </body>

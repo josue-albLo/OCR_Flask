@@ -1,15 +1,17 @@
-{% extends "base.html" %} 
-{% block title %}reports{% endblock %} 
-{% block content %}
-<h1>Proximamente... </h1>
-{% with errors = get_flashed_messages(category_filter=["error"]) %}
+{% extends "base.html" %} {% block title %}reports{% endblock %} {% block
+content %} {% with errors = get_flashed_messages(category_filter=["error"]) %}
 {% if errors %}
 <div class="alert alert-danger">
-    {% for msg in errors %}
-    <strong>¡Error!</strong> {{ msg }}
-    {% endfor -%}
+  {% for msg in errors %}
+  <strong>¡Error!</strong> {{ msg }} {% endfor -%}
 </div>
-{% endif %}
-{% endwith %}
+
+{% endif %} {% endwith %}
+<h1>Descargar todos los usuarios</h1>
+<div class="group-buttons">
+  <button class="btn button-primary">
+    <a href="/download/reports" download>Descargar</a>
+  </button>
+  <button class="btn button-back"><a href="/index">Regresar</a></button>
+</div>
 {% endblock %}
-    

@@ -4,23 +4,52 @@
 <section class="table-content">
   <section class="search-option">
     <form method="POST" action="/search/user">
-      <input placeholder="Nis ej: 0000000" class="input" id="search" type="number" name="search" />
-      <button class="btn button-search" type="submit">Buscar</button>
+      <div>
+        <label for="start_period">Fecha de inicio</label>
+        <input
+          class="input"
+          type="date"
+          name="start_period"
+          id="start_period"
+          placeholder="Enter start period"
+          required
+        />
+      </div>
+      <div>
+        <label for="end_period">Fecha de fin</label>
+        <input
+          class="input"
+          type="date"
+          name="end_period"
+          id="end_period"
+          placeholder="Enter start end period"
+          required
+        />
+      </div>
+      <div>
+        <label for="search">NIS</label>
+        <input
+          placeholder="Ej: 0000000"
+          class="input"
+          id="search"
+          type="number"
+          name="search"
+          required
+        />
+      </div>
+      <div class="search-btn"><button class="btn button-search" type="submit">Buscar</button></div>
     </form>
   </section>
-  {% with errors = get_flashed_messages(category_filter=["error"]) %}
-{% if errors %}
-<div class="alert alert-danger">
+  {% with errors = get_flashed_messages(category_filter=["error"]) %} {% if
+  errors %}
+  <div class="alert alert-danger">
     {% for msg in errors %}
-    <strong>¡Error!</strong> {{ msg }}
-    {% endfor -%}
-</div>
-{% endif %}
-{% endwith %}
-  {% if context.users  %}
+    <strong>¡Error!</strong> {{ msg }} {% endfor -%}
+  </div>
+  {% endif %} {% endwith %} {% if context.users %}
   <table class="users-table">
     <caption>
-      <h2>Últimos registros</h2>
+      <h1>Últimos registros</h1>
     </caption>
     <thead>
       <tr class="table-header">
@@ -43,12 +72,18 @@
         <td>{{user.consumption_kwh}}</td>
         <td>{{user.start_period}}</td>
         <td>{{user.end_period}}</td>
-        <td>{{user.total_pay}}</td>
+        <td>Q {{user.total_pay}}</td>
         <td class="buttons-action">
-          <form action="user/info/{{user.nis}}/{{user.start_period.replace('/','-')}}/{{user.end_period.replace('/','-')}}" method="POST">
+          <form
+            action="user/info/{{user.nis}}/{{user.start_period.replace('/','-')}}/{{user.end_period.replace('/','-')}}"
+            method="POST"
+          >
             <button class="btn button-info" type="submit">Ver</button>
           </form>
-          <form action="user/delete/{{user.nis}}/{{user.start_period.replace('/','-')}}/{{user.end_period.replace('/','-')}}" method="POST">
+          <form
+            action="user/delete/{{user.nis}}/{{user.start_period.replace('/','-')}}/{{user.end_period.replace('/','-')}}"
+            method="POST"
+          >
             <button class="btn button-del" type="submit">Eliminar</button>
           </form>
         </td>
@@ -58,10 +93,8 @@
     </tbody>
   </table>
 </section>
-  {% else %}
-  <p>No hay registros</p>
-  {% endif %}
-
-{% block scriptsjs %}
+{% else %}
+<p>No hay registros</p>
+{% endif %} {% block scriptsjs %}
 <script src="../static/js/database.js"></script>
 {% endblock %} {% endblock %}
