@@ -96,7 +96,11 @@ def index():
         return render_template("index.html", context={"users": []})
 
     # Convert to json
-    all_users = [dict(user) for user in all_users]
+    for user in all_users:
+        total_pay = user["total_pay"].replace(",", "")
+        consumption_kwh = user["consumption_kwh"].replace(",", "")
+        user["total_pay"] = f"{float(total_pay):.2f}"
+        user["consumption_kwh"] = f"{float(consumption_kwh):.2f}"
 
     return render_template("index.html", context={"users": all_users, "years": all_years})
 
