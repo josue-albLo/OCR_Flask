@@ -237,6 +237,7 @@ def delete_user(id, start_period, end_period):
 )
 @login_required
 def user_info(id, start_period, end_period):
+    path_image = "uploads/temp_image.png"
     start_period = start_period.replace("-", "/")
     end_period = end_period.replace("-", "/")
     cleanup_file("temp_image.png")
@@ -333,8 +334,10 @@ def search():
         return render_template("search.html", context={"users": []})
     
     for user in users:
-        user["total_pay"] = f"{float(user['total_pay']):,.2f}"
-        user["consumption_kwh"] = f"{float(user['consumption_kwh']):,.2f}"
+        total_pay = user["total_pay"].replace(",", "")
+        consumption_kwh = user["consumption_kwh"].replace(",", "")
+        user["total_pay"] = f"{float(total_pay):,.2f}"
+        user["consumption_kwh"] = f"{float(consumption_kwh):,.2f}"
     
   
     return render_template("search.html", context={"users": users, "years": all_years})
@@ -355,10 +358,9 @@ def reports():
         "End of Period",
         "Total Payment",
     ]
-    df["Total Payment"] = df["Total Payment"].apply(lambda x: float(f"{float(x):.2f}"))
-    df["KWh Consumption"] = df["KWh Consumption"].apply(
-        lambda x: float(f"{float(x):.2f}")
-    )
+    df["Total Payment"] = df["Total Payment"].apply(lambda x: float(f"{float(str(x).replace(',', '')):.2f}"))
+    df["KWh Consumption"] = df["KWh Consumption"].apply(lambda x: float(f"{float(str(x).replace(',', '')):.2f}"))
+
     df["NIS Number"] = df["NIS Number"].apply(lambda x: str(x))
     path_xlsx = f"uploads/reports.xlsx"
 
