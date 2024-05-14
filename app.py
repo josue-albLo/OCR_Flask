@@ -253,9 +253,10 @@ def user_info(id, start_period, end_period):
         return redirect(url_for("search"))
 
     image = connection.getImage(id, start_period, end_period)
-
-    user["total_pay"] = f"{float(user['total_pay']):,.2f}"
-    user["consumption_kwh"] = f"{float(user['consumption_kwh']):,.2f}"
+    totay_pay = user["total_pay"].replace(",", "")
+    consumption_kwh = user["consumption_kwh"].replace(",", "")
+    user["total_pay"] = f"{float(totay_pay):,.2f}"
+    user["consumption_kwh"] = f"{float(consumption_kwh):,.2f}"
 
     if image is None:
         flash("Image not found", "error")

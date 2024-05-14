@@ -1,120 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="es">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Animación de Borde de Botón</title>
     <style>
-      section{
-        width: 25%;
-      }
-      .form-container {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 20px;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      }
-      
-      .form-section {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-      }
-      
-      .form-group {
-        flex-grow: 1;
-        min-width: 220px;
-      }
-      
-      .input-field {
-        width: 80%;
-        padding: 8px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        margin-top: 4px;
-      }
-      
-      .form-actions {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin-top: 20px;
-      }
-      
-      .btn {
-        padding: 10px 20px;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        font-size: 16px;
-      }
-      
-      .button-success {
-        background-color: #4CAF50;
-        color: white;
-      }
-      
-      .button-cancel {
-        background-color: #f44336;
-        color: white;
-      }
-      
-      .btn:hover {
-        opacity: 0.8;
-      }
-      
-    </style>
-  </head>
-  <body>
-    <section>
-      <form class="form-multiple" method="POST" action="/database/save">
-        <div class="form-container">
-          <div class="form-section">
-            <div class="form-group">
-              <label for="nis">NIS</label>
-              <input class="input-field" type="text" name="nis" id="nis"
-                value="{{user['nis']}}" readonly>
-            </div>
-            <div class="form-group">
-              <label for="date_issue">Fecha de emisión</label>
-              <input class="input-field" type="text" name="date_issue"
-                id="date_issue" value="{{user['date_issue']}}" readonly>
-            </div>
-            <div class="form-group">
-              <label for="start_period">Fecha de inicio</label>
-              <input class="input-field" type="text" name="start_period"
-                id="start_period" value="{{user['start_period']}}" readonly>
-            </div>
-            <div class="form-group">
-              <label for="end_period">Fecha de fin</label>
-              <input class="input-field" type="text" name="end_period"
-                id="end_period" value="{{user['end_period']}}" readonly>
-            </div>
-            <div class="form-group">
-              <label for="consumption_kwh">Consumo de KWh</label>
-              <input class="input-field" type="text" name="consumption_kwh"
-                id="consumption_kwh" value="{{user['consumption_kwh']}}"
-                readonly>
-            </div>
-            <div class="form-group">
-              <label for="total_pay">Total a pagar</label>
-              <input class="input-field" type="text" name="total_pay"
-                id="total_pay" value="{{user['total_pay']}}" readonly>
-            </div>
-          </div>
-          <input type="hidden" name="file_name" id="file_name"
-            value="{{user['file_name']}}" readonly>
-        </div>
-        <div class="form-actions">
-          <button class="btn button-success" type="submit">Guardar</button>
-          <button class="btn button-cancel" type="button"
-            onclick="clearInfo()">Eliminar</button>
-        </div>
-      </form>
-    </section>
+        .button {
+            position: relative;
+            display: inline-block;
+            padding: 10px 20px;
+            color: white;
+            background-color: black;
+            border: 2px solid transparent;
+            cursor: pointer;
+            overflow: hidden;
+        }
 
-  </body>
+        .button::before,
+        .button::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            transition: width 0.5s ease-in-out, height 0.5s ease-in-out, top 0.5s ease-in-out, bottom 0.5s ease-in-out, left 0.5s ease-in-out, right 0.5s ease-in-out;
+        }
+
+        .button::before {
+            bottom: 0;
+            left: 50%;
+        }
+
+        .button::after {
+            top: 0;
+            right: 50%;
+        }
+
+        .button:hover::before {
+            width: 50%;
+            left: 0;
+            transition-delay: 0.5s;
+        }
+
+        .button:hover::after {
+            width: 50%;
+            right: 0;
+            transition-delay: 0.5s;
+        }
+
+        .button:hover::before {
+            height: 100%;
+            width: 2px;
+            bottom: 0;
+            top: 0;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <button class="button">Botón</button>
+</body>
 </html>

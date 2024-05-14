@@ -14,23 +14,20 @@
   padding: 0;
   box-sizing: border-box;
 }
-html{
-  font-family: "Roboto", sans-serif;
-}
+
 body {
   background: var(--color-text-white);
   display: flex;
   justify-content: space-between;
   gap: 10px;
+  font-family: "Roboto", sans-serif;
 }
 
 header {
-  float: left;
-  width: 350px;
   background-color: #1b1b6e;
   color: var(--color-text-white);
   padding: 10px;
-  max-width: auto;
+  width: 20%;
   min-height: 100vh;
 }
 
@@ -39,7 +36,6 @@ header nav ul {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  position: fixed;
   padding: 10px;
 }
 
@@ -47,7 +43,7 @@ header nav ul li {
   border: 1px solid #1b1b6e;
   background-color: #0a0f55;
   border-radius: 5px;
-  padding: 10px 60px;
+  padding: 10px 40px;
   text-align: center;
 }
 
@@ -57,19 +53,31 @@ header nav ul li:hover {
   border: 1px solid #f3f3f3;
 }
 
+header nav ul li a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px; /* Ajusta la distancia desde el texto */
+  width: 100%;
+  height: 2px; /* Ajusta el grosor de la línea */
+  background: var(--color-bg-light); /* Ajusta el color de la línea */
+  transform: scaleX(0);
+  transform-origin: bottom left;
+  transition: transform 0.4s ease-in-out;
+}
+
+header nav ul li a:hover::after {
+  transform: scaleX(1);
+}
+
 header nav ul li a {
   color: var(--color-text-white);
   text-decoration: none;
-  font-size: 24px;
-}
-
-header nav ul li a:hover {
-  transition: all 0.3s ease-in-out;
-  text-decoration: underline 2px;
+  position: relative;
 }
 
 .container {
-  margin-top: 30px;
+  margin-top:10px;
   width: 90%;
   display: flex;
   flex-direction: column;
@@ -84,14 +92,13 @@ header nav ul li a:hover {
   margin: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   width: 80%;
-  font-size: 24px;
 }
 
 .table-content {
   display: flex;
   align-items: center;
   flex-direction: column;
-  margin-top: 20px;
+  margin-top: 10px;
   right: 0;
   width: 100%;
 }
@@ -114,14 +121,13 @@ header nav ul li a:hover {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  margin: 10px;
+  margin: 5px;
   padding: 5px;
 }
 
 .search-option form {
   display: flex;
   gap: 10px;
-
 }
 
 input[type="date"] {
@@ -129,18 +135,13 @@ input[type="date"] {
   padding: 5px;
   border-radius: 5px;
   border: 1px solid #ccc;
-  font-size: 20px;
 }
 
-label{
-  font-size: 20px;
-
-}
-.search-btn{
+.search-btn {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 28px;
+  margin-top: 20px;
 }
 .btn {
   border-radius: 10px;
@@ -149,7 +150,6 @@ label{
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 24px;
   margin: 4px 2px;
   cursor: pointer;
   padding: 8px 15px;
@@ -201,7 +201,6 @@ label{
   display: flex;
   justify-content: center;
   align-self: calc(100% - 20px);
-  font-size: 24px;
 }
 .load-file form {
   display: flex;
@@ -209,8 +208,10 @@ label{
   align-items: center;
 }
 
-input[type="file"], input[type="submit"], input[type="number"], input[type="text"] {
-  font-size: 20px;
+input[type="file"],
+input[type="submit"],
+input[type="number"],
+input[type="text"] {
 }
 
 input[type="number"] {
@@ -338,7 +339,6 @@ input[type="text"] {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  font-size: 24px;
 }
 
 /* Estilos de la tarjeta */
@@ -350,8 +350,8 @@ input[type="text"] {
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  width: 1000px;
-  height: 800px;
+  width: 800px;
+  height: 600px;
   margin-bottom: 10px;
   flex-direction: row;
 }
@@ -359,17 +359,20 @@ input[type="text"] {
 /* Estilos del lado izquierdo de la tarjeta */
 .left-side {
   margin-right: 20px;
-  line-height: 5rem;
+  line-height: 2rem;
   padding: 10px;
   height: auto;
 }
 
 .left-side p {
   margin-bottom: 10px;
+  color: var(--color-info);
+  font-weight: 700;
 }
 
 .left-side p span {
   font-weight: bold;
+  color: var(--color-primary);
 }
 
 /* Estilos de la figura en el lado derecho de la tarjeta */
@@ -378,15 +381,14 @@ input[type="text"] {
 }
 
 .right-side img {
-  width: 550px;
-  height: 750px;
+  width: 430px;
+  height: 530px;
   border-radius: 8px;
 }
 
 .button-back {
   border: 1px solid var(--color-success);
   color: #fff;
-  
 }
 
 .button-back a {
@@ -397,7 +399,6 @@ input[type="text"] {
 
 .button-back a:hover {
   color: var(--color-bg-light);
-  
 }
 
 .button-back:hover {
@@ -432,7 +433,6 @@ button a {
 .close {
   color: #aaa;
   float: right;
-  font-size: 28px;
   font-weight: bold;
 }
 
@@ -461,21 +461,18 @@ h1 {
   color: var(--color-primary);
   font-size: 40px;
   text-align: center;
-  margin-top: 20px;
 }
 
 h4 {
   color: var(--color-bg-dark);
-  font-size: 25px;
   text-align: center;
   margin-top: 10px;
 }
 
 .welcome {
-  font-size: 24px;
-  line-height: 1.6;
+  line-height: 1.6em;
   margin: 10px;
-  width: 60%;
+  width: 90%;
   text-align: justify;
   background-color: #fff;
   padding: 15px;
@@ -484,7 +481,6 @@ h4 {
 }
 
 hr {
-  border: none;
   height: 1px;
   background: #000000;
   margin-bottom: 10px;
@@ -499,6 +495,7 @@ hr {
   text-decoration: none; /* Quitar subrayado */
   display: inline-block; /* Mostrar como bloque en línea */
   transition: background-color 0.3s; /* Transición de color de fondo */
+  margin-bottom: 10px;
 }
 
 .logout-btn:hover {
@@ -515,10 +512,6 @@ hr {
   display: flex;
   justify-content: flex-end;
   margin-right: 40px;
-}
-
-.div-logout button a {
-  font-size: 24px;
 }
 
 .download {
@@ -557,7 +550,6 @@ hr {
   justify-content: space-around;
   align-items: center;
   width: 100%;
-  
 }
 
 canvas {
@@ -574,17 +566,17 @@ canvas {
 }
 
 .imagen-hover {
-  transition: transform 0.3s ease-in-out;  /* Suaviza la transición */
-  display: block;                          /* Opcional: asegura que la img no esté en línea */
-  margin: 10px;                         /* Opcional: para centrar la imagen si es necesario */
+  transition: transform 0.3s ease-in-out; /* Suaviza la transición */
+  display: block; /* Opcional: asegura que la img no esté en línea */
+  margin: 10px; /* Opcional: para centrar la imagen si es necesario */
 }
 
 .imagen-hover:hover {
-  transform: scale(1.3);  /* Aumenta el tamaño de la imagen al 110% */
+  transform: scale(1.3); /* Aumenta el tamaño de la imagen al 110% */
 }
 
 /* Multiple archivos */
-.container-mult-data{
+.container-mult-data {
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -594,7 +586,7 @@ canvas {
   overflow-y: auto;
   margin-top: 50px;
 }
-.mul-data{
+.mul-data {
   width: 50%;
   display: flex;
   gap: 10px;
@@ -638,8 +630,8 @@ canvas {
 }
 
 /* Estilo básico para el link */
-.filter{
-  margin: 20px 0 20px;
+.filter {
+  margin: 10px 0 10px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -648,16 +640,17 @@ canvas {
   text-decoration: none; /* Elimina el subrayado */
   color: var(--color-primary); /* Color azul claro para el texto */
   font-weight: bold; /* Hace el texto más grueso */
-  padding: 8px 16px; /* Añade padding para hacerlo más grande */
-  border: 2px solid var(--color-primary); /* Borde del mismo color */
+  padding: 4px 8px; /* Añade padding para hacerlo más grande */
+  border: 1px solid var(--color-primary); /* Borde del mismo color */
   border-radius: 8px; /* Bordes redondeados */
   transition: all 0.3s ease; /* Transición suave para los cambios de estilo */
-  font-family: Arial, sans-serif; /* Fuente más moderna y limpia */
 }
 
 /* Estilo para el hover */
 .styled-link:hover {
-  background-color: var(--color-primary); /* Fondo azul cuando se pasa el mouse por encima */
+  background-color: var(
+    --color-primary
+  ); /* Fondo azul cuando se pasa el mouse por encima */
   color: white; /* Texto blanco para contrastar con el fondo */
   text-decoration: none; /* Asegura que no haya subrayado */
 }

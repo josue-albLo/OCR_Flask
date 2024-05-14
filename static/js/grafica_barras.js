@@ -101,41 +101,26 @@ var graficoConsumo = new Chart(ctxConsumo, {
     scales: {
       x: {
         ticks: {
-          font: {
-            size: 16,
-          },
         },
       },
       y: {
         ticks: {
-          font: {
-            size: 16,
-          },
         },
       },
     },
     plugins: {
       legend: {
         labels: {
-          font: {
-            size: 18,
-          },
         },
       },
       title: {
         display: true,
         text: "Gráfico de Consumo por Mes",
         font: {
-          size: 22,
+          size: 20,
         },
       },
       tooltip: {
-        bodyFont: {
-          size: 14,
-        },
-        titleFont: {
-          size: 16,
-        },
       },
     },
   },
@@ -163,41 +148,29 @@ var graficoPago = new Chart(ctxPago, {
     scales: {
       x: {
         ticks: {
-          font: {
-            size: 16,
-          },
         },
       },
       y: {
         ticks: {
-          font: {
-            size: 16,
-          },
         },
       },
     },
     plugins: {
       legend: {
         labels: {
-          font: {
-            size: 18,
-          },
+         
         },
       },
       title: {
         display: true,
         text: `Gráfico de Pagos por Mes de ${year[0]} `,
         font: {
-          size: 22,
+          size: 20,
         },
       },
       tooltip: {
-        bodyFont: {
-          size: 14,
-        },
-        titleFont: {
-          size: 16,
-        },
+
+        
       },
     },
   },
@@ -224,32 +197,26 @@ var graficoMaxPago = new Chart(ctxMaxPago, {
     scales: {
       x: {
         ticks: {
-          font: {
-            size: 16,
-          },
+          
         },
       },
       y: {
         ticks: {
-          font: {
-            size: 16,
-          },
+          
         },
       },
     },
     plugins: {
       legend: {
         labels: {
-          font: {
-            size: 18,
-          },
+          
         },
       },
       title: {
         display: true,
         text: `Pago Máximo por Mes con NIS de ${year[0]}`,
         font: {
-          size: 22,
+          size: 20,
         },
       },
       tooltip: {
@@ -259,12 +226,6 @@ var graficoMaxPago = new Chart(ctxMaxPago, {
               tooltipItem.raw
             }`;
           },
-        },
-        bodyFont: {
-          size: 14,
-        },
-        titleFont: {
-          size: 16,
         },
       },
     },
