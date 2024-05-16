@@ -25,7 +25,6 @@
       h1 {
         color: #ff6200;
         text-transform: uppercase;
-        margin: 0 0 2.5rem 0;
         letter-spacing: 0.6rem;
       }
 
@@ -95,11 +94,17 @@
         border-color: #dc3545;
         color: #dc3545;
       }
+     img{
+        width: 200px;
+        height: 120px;
+     }
     </style>
   </head>
   <body>
     <h1>TechDocAdvantage Pro</h1>
-
+    <figure class="logo">
+      <img src="{{url_for('static', filename='img/logo.png')}}" alt="Logotipo">
+    </figure>
     <section>
       <form method="POST" action="/login">
         <label for="username">Usuario</label>
