@@ -9,7 +9,7 @@ function toggleBatchMode() {
   // Cambia el texto del botón de modo
   document.querySelector(".btn").textContent = batchMode
     ? "Cargar uno"
-    : "Cargar varios archivos";
+    : "Cargar archivos";
     // Cambia el texto del botón de carga
     btnLoad.textContent = batchMode
     ? "Cargar archivos"

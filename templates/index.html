@@ -40,7 +40,6 @@
 <script>
   // Pasar los registros a JavaScript
   var registros = {{ context.users| tojson| safe}};
-  console.log(registros);
 </script>
 <script src="{{ url_for('static', filename='js/grafica_barras.js') }}"></script>
 {% endblock %}

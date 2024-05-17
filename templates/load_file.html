@@ -8,7 +8,7 @@
       <!-- Input para seleccionar archivos -->
       <input id="file" type="file" name="myfile" accept=".pdf,.jpg,.png" />
       <!-- Botón para cambiar entre cargar un archivo o cargar un lote -->
-      <button id="multiple" type="button" onclick="toggleBatchMode()" class="btn button-primary">Cargar varios archivos</button>
+      <button id="multiple" type="button" onclick="toggleBatchMode()" class="btn button-primary">Cargar archivos</button>
       <!-- Botón para enviar el formulario -->
       <button id="openModal" class="btn button-search" type="submit">
           Cargar recibo
@@ -132,7 +132,7 @@
     <script src="{{ url_for('static', filename='js/forms.js') }}"></script>
 
     <script>
-        var data_context = {{ context | tojson }} || {};
+        var data_context = {{ context | tojson | safe}};
     </script>
   
 

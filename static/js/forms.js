@@ -1,5 +1,6 @@
+
 var users = data_context ? data_context.array_data : [];
-console.log(users);
+
 
 var errorsApi = {
   no_data_provided: "No se proporcionaron datos",
@@ -56,7 +57,7 @@ function init() {
                 </div>
                 <div class="form-actions">
                     <button class="btn button-success" type="submit">Guardar</button>
-                    <button class="btn button-cancel" type="button" onclick="removeElement(this)">Eliminar</button>
+                    <button class="btn button-cancel" type="button" onclick="removeElement(this, '${user.file_name}')">Eliminar</button>
                 </div>
             `;
       container.appendChild(form);
@@ -64,15 +65,22 @@ function init() {
   }
 }
 
-function removeElement(button) {
+function removeElement(button, file_name = null) {
+  if (file_name) {
+    delFileFromServer(file_name);
+  }
   button.closest("form").remove();
 }
 
 function delElement(form) {
   const data = new FormData(form);
   const nis = data.get("nis");
+  const file_name = data.get("file_name");
   users = users.filter((user) => user.nis !== nis);
   form.remove();
+  if (file_name) {
+    delFileFromServer(file_name);
+  }
 }
 
 async function saveData(form) {
@@ -111,13 +119,29 @@ async function saveData(form) {
       throw new Error(mapError);
     }
 
-    const responseData = await response.json();
-    console.log(responseData);
     showAlert(responseApi.user_saved, "success");
     removeElement(form);
   } catch (error) {
     console.error("Error:", error);
     // showAlert(error.toString(), "error");
+  }
+}
+
+async function delFileFromServer(file_name) {
+  const filename = { filename: file_name };
+  try {
+    const response = await fetch("http://127.0.0.1:5000/delete/image", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(filename),
+    });
+    if (!response.ok) {
+      throw new Error("Error al eliminar el archivo");
+    }
+  } catch (error) {
+    console.error("Error:", error);
   }
 }
 

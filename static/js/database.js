@@ -1,7 +1,7 @@
 var modal = document.getElementById("mymodal") || null;
 var btn = document.getElementById("openModal") || null;
 var btnOneFile = document.getElementById("multiple").textContent || null;
-
+var context = data_context.data || null;
 
 btn.onclick = function () {
   modal.style.display = "block";
@@ -9,8 +9,8 @@ btn.onclick = function () {
 };
 
 window.onload = function() {
-  if (contex.data != 1) {
-      document.getElementById('mymodal').style.display = 'none';
+  if (context != 1) {
+      modal.style.display = "none";
   }
 };
 

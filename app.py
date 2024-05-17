@@ -409,7 +409,7 @@ def load_file():
             "load_file.html", context={"data": new_data, "array_data": []}
         )
 
-    return render_template("load_file.html", context=None)
+    return render_template("load_file.html", context={"data": {}, "array_data": []})
 
 
 @app.route("/load/one/file", methods=["POST"])
@@ -457,6 +457,17 @@ def load_one_file():
         return jsonify(message="error_saving_user"), 400
 
     return jsonify(message="user_saved"), 200
+
+@app.route("/delete/image", methods=["DELETE"])
+def delete_image():
+    data = request.json
+    filename = data.get("filename")
+    path = f"uploads/{filename}"
+    if not filename:
+        return jsonify(message="filename_not_provided"), 400
+    if os.path.exists(path):
+        os.remove(path)
+        return jsonify(message="image_deleted"), 200
 
 
 def transform_correct_date(date):

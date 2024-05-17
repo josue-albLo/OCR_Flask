@@ -32,7 +32,6 @@ const consumoPorMes = registros.reduce((acc, curr) => {
 // Agrupar datos por mes para pagos
 const pagoPorMes = registros.reduce((acc, curr) => {
   const monthYear = parseDate(curr.start_period);
-  console.log(curr.total_pay, "total por mes", monthYear);
   if (!acc[monthYear]) {
     acc[monthYear] = 0;
   }
@@ -42,7 +41,6 @@ const pagoPorMes = registros.reduce((acc, curr) => {
 
 const maxPagoPorMes = registros.reduce((acc, curr) => {
   const monthYear = parseDate(curr.start_period);
-  console.log(curr.total_pay, "total por mes");
   const pago = parseFloat(curr.total_pay);
   if (!acc[monthYear] || acc[monthYear].pago < pago) {
     acc[monthYear] = { pago: pago, nis: curr.nis };
@@ -73,9 +71,6 @@ const pagoData = sortedMonths.map((month) => pagoPorMes[month]);
 const maxPagoData = sortedMonths.map((month) => maxPagoPorMes[month].pago);
 const nisMaxPago = sortedMonths.map((month) => maxPagoPorMes[month].nis);
 
-console.log(consumoPorMes);
-console.log(pagoPorMes);
-console.log(maxPagoPorMes);
 
 /// Gráfico de Consumo
 
