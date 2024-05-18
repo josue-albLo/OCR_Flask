@@ -29,7 +29,7 @@
     {% if context %}
     {%  if context.data %}
     <section id="mymodal" class="send-form modal">
-        <form class="form" id="data-to-save" method="POST" action="/database/save">
+      <form class="form" id="data-to-save" method="POST" action="/database/save">
           <div class="form-group-elements">
             <div class="group-form">
               <label for="nis">NIS</label>
@@ -109,7 +109,7 @@
         </div>
         <div class="group-buttons">
           <button class="btn button-success" type="submit">Guardar</button>
-          <button class="btn button-cancel" onclick="clearInfo()" id="clean-info">Cancelar</button>
+          <button class="btn button-cancel" onclick="clearInfo('{{context.data['file_name']}}')" id="clean-info">Cancelar</button>
         </div>
       </form>
     </section>
