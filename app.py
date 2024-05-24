@@ -21,6 +21,8 @@ from functools import wraps
 import pandas as pd
 from flask_cors import CORS
 import time
+import threading
+
 
 app = Flask(__name__)
 CORS(app)
@@ -38,6 +40,26 @@ ONLY_IMAGE_EXTENSIONS = {".png", ".jpg"}
 ONLY_PDF_EXTENSIONS = {".pdf"}
 
 DONT_SAVE_WITHOUT_NIS = "NIS no encontrado"
+
+
+def role_required(role):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if "logged_in" not in session:
+                flash("Please log in to access this page", "error")
+                return redirect(url_for("login"))
+            if session.get("role") != role:
+                flash(
+                    "You do not have the necessary permissions to access this page",
+                    "error",
+                )
+                return redirect(url_for("load_file"))
+            return f(*args, **kwargs)
+
+        return decorated_function
+
+    return decorator
 
 
 def login_required(f):
@@ -61,6 +83,11 @@ def login():
             return redirect(url_for("init"))
         session.clear()
         session["logged_in"] = True
+        session["role"] = verify_exists["role"]
+        session["username"] = verify_exists["username"]
+        if verify_exists["role"] == "user":
+            return redirect(url_for("load_file"))
+
         return redirect(url_for("index"))
 
     return redirect(url_for("init"))
@@ -75,22 +102,23 @@ def logout():
 
 @app.route("/index")
 @login_required
+@role_required("admin")
 def index():
     current_year = time.localtime().tm_year
     year = request.args.get("year")
     year = year.strip() if year else current_year
-     
+
     if year:
         all_users = connection.getAllUsers(year=year)
     else:
         all_users = connection.getAllUsers()
     all_years = set(connection.get_all_years())
     all_years = sorted(all_years)
-    is_valid_year = year in all_years and len(all_years) <= 1 
-    
+    is_valid_year = year in all_years and len(all_years) <= 1
+
     if is_valid_year:
         all_years.remove(year)
-    
+
     if not all_users:
         flash("No users found", "error")
         return render_template("index.html", context={"users": []})
@@ -102,7 +130,9 @@ def index():
         user["total_pay"] = f"{float(total_pay):.2f}"
         user["consumption_kwh"] = f"{float(consumption_kwh):.2f}"
 
-    return render_template("index.html", context={"users": all_users, "years": all_years})
+    return render_template(
+        "index.html", context={"users": all_users, "years": all_years}
+    )
 
 
 path_name_to_extract = None
@@ -162,12 +192,6 @@ def upload_file():
     return redirect(url_for("load_file"))
 
 
-@app.route("/multiple/upload", methods=["GET"])
-def multiple_upload(files):
-
-    return render_template("multiple_upload.html")
-
-
 @app.route("/database/save", methods=["POST"])
 @login_required
 def save_user():
@@ -223,6 +247,7 @@ def save_user():
     methods=["POST"],
 )
 @login_required
+@role_required("admin")
 def delete_user(id, start_period, end_period):
     start_period = start_period.replace("-", "/")
     end_period = end_period.replace("-", "/")
@@ -240,6 +265,7 @@ def delete_user(id, start_period, end_period):
     methods=["POST", "GET"],
 )
 @login_required
+@role_required("admin")
 def user_info(id, start_period, end_period):
     path_image = "uploads/temp_image.png"
     start_period = start_period.replace("-", "/")
@@ -274,6 +300,7 @@ def user_info(id, start_period, end_period):
 
 @app.route("/mostrar_imagen_temporal")
 @login_required
+@role_required("admin")
 def mostrar_imagen_temporal():
     return send_from_directory("uploads/", "temp_image.png")
 
@@ -285,6 +312,7 @@ def init():
 
 @app.route("/search/user", methods=["POST"])
 @login_required
+@role_required("admin")
 def search_user():
     if request.method == "POST":
 
@@ -321,35 +349,36 @@ def search_user():
 
 @app.route("/search", methods=["GET"])
 @login_required
+@role_required("admin")
 def search():
-    
+
     year = request.args.get("year")
     current_year = time.localtime().tm_year
     year = year.strip() if year else current_year
     all_years = set(connection.get_all_years())
     all_years = sorted(all_years)
-    is_valid_year = year in all_years and len(all_years) <= 1 
-    
+    is_valid_year = year in all_years and len(all_years) <= 1
+
     if is_valid_year:
         all_years.remove(year)
-    
+
     users = connection.getAllUsers(year=year)
     if not users:
         flash("No users found", "error")
         return render_template("search.html", context={"users": []})
-    
+
     for user in users:
         total_pay = user["total_pay"].replace(",", "")
         consumption_kwh = user["consumption_kwh"].replace(",", "")
         user["total_pay"] = f"{float(total_pay):,.2f}"
         user["consumption_kwh"] = f"{float(consumption_kwh):,.2f}"
-    
-  
+
     return render_template("search.html", context={"users": users, "years": all_years})
 
 
 @app.route("/reports", methods=["GET"])
 @login_required
+@role_required("admin")
 def reports():
     # generate excel  to download
     all_users = connection.getAllUsers()
@@ -363,8 +392,12 @@ def reports():
         "End of Period",
         "Total Payment",
     ]
-    df["Total Payment"] = df["Total Payment"].apply(lambda x: float(f"{float(str(x).replace(',', '')):.2f}"))
-    df["KWh Consumption"] = df["KWh Consumption"].apply(lambda x: float(f"{float(str(x).replace(',', '')):.2f}"))
+    df["Total Payment"] = df["Total Payment"].apply(
+        lambda x: float(f"{float(str(x).replace(',', '')):.2f}")
+    )
+    df["KWh Consumption"] = df["KWh Consumption"].apply(
+        lambda x: float(f"{float(str(x).replace(',', '')):.2f}")
+    )
 
     df["NIS Number"] = df["NIS Number"].apply(lambda x: str(x))
     path_xlsx = f"uploads/reports.xlsx"
@@ -380,6 +413,7 @@ def reports():
 
 @app.route("/download/reports", methods=["GET"])
 @login_required
+@role_required("admin")
 def download_reports():
     path_xlsx = "uploads/reports.xlsx"
     if os.path.exists(path_xlsx):
@@ -402,7 +436,7 @@ def load_file():
         )
 
     if data:
-        
+
         new_data = copy.copy(data)
         session.pop("data", None)
         return render_template(
@@ -418,12 +452,11 @@ def load_one_file():
     if not data:
         return jsonify("no_data_privide"), 400
 
-
     nis = data.get("nis")
     start_period = data.get("start_period")
     end_period = data.get("end_period")
-    filename = data.get("file_name") 
-    
+    filename = data.get("file_name")
+
     new_user = {
         "nis": nis,
         "date_issue": data.get("date_issue"),
@@ -457,6 +490,7 @@ def load_one_file():
         return jsonify(message="error_saving_user"), 400
 
     return jsonify(message="user_saved"), 200
+
 
 @app.route("/delete/image", methods=["DELETE"])
 def delete_image():
@@ -498,7 +532,10 @@ def get_text_from_image(file, extension):
     result = regex_fields.get_important_fields(text)
     if not is_valid_user(result):
         os.remove(path_file)
-        flash(f"User is invild some fields are wrong, this is the file: {file.filename}", "error")
+        flash(
+            f"User is invild some fields are wrong, this is the file: {file.filename}",
+            "error",
+        )
         return None
     return {**result, "file_name": file.filename}
 
@@ -546,37 +583,54 @@ def save_on_database(user, nis, start_period, end_period, filename):
         return None
 
 
+def process_file(file, extension, data_from_files, data_errors):
+    if extension in ONLY_IMAGE_EXTENSIONS:
+        text_from_img = get_text_from_image(file, extension)
+        if text_from_img is None:
+            data_errors.append(f"Error uploading file {file.filename}")
+        else:
+            data_from_files.append(text_from_img)
+    elif extension in ONLY_PDF_EXTENSIONS:
+        text_from_img = get_text_from_pdf(
+            file, os.path.splitext(file.filename)[0], extension
+        )
+        if text_from_img is None:
+            data_errors.append(f"Error uploading file {file.filename}")
+        else:
+            data_from_files.append(text_from_img)
+    else:
+        data_errors.append(f"Error uploading file {file.filename}")
+
+
 def load_data_multiple_files(files):
-    # Load data from multiple files
     data_from_files = []
     data_errors = []
+    threads = []
+
     for file in files:
-        name, extension = os.path.splitext(file.filename)
+        _, extension = os.path.splitext(file.filename)
 
         if extension not in ALLOWED_EXTENSIONS:
             flash(f"File not allowed {file.name}", "error")
             return redirect(url_for("load_file"))
 
-        elif extension in ONLY_IMAGE_EXTENSIONS:
-            text_from_img = get_text_from_image(file, extension)
-            if text_from_img is None:
-                data_errors.append(f"Error uploading file {file.filename}")
-                continue
-            data_from_files.append(text_from_img)
-        elif extension in ONLY_PDF_EXTENSIONS:
-            text_from_img = get_text_from_pdf(file, name, extension)
-            if text_from_img is None:
-                data_errors.append(f"Error uploading file {file.filename}")
-                continue
-            data_from_files.append(text_from_img)
-        else:
-            data_errors.append(f"Error uploading file {file.filename}")
+        thread = threading.Thread(
+            target=process_file, args=(file, extension, data_from_files, data_errors)
+        )
+        threads.append(thread)
+        thread.start()
+
+    for thread in threads:
+        thread.join()
+
     return data_from_files, data_errors
-    
+
+
 def cleanup_file(filename):
     file_path = os.path.join("uploads", filename)
     if os.path.exists(file_path):
         os.remove(file_path)
+
 
 if __name__ == "__main__":
     app.run()
