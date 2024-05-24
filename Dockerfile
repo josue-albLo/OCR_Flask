@@ -5,11 +5,13 @@ FROM python:3.11-slim
 WORKDIR /app
 
 # Instalar las dependencias del sistema necesarias para Tesseract y OpenCV
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr \
     libtesseract-dev \
     libgl1-mesa-glx \
-    libglib2.0-0
+    libglib2.0-0 \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copiar los archivos necesarios a la imagen
 COPY . /app
@@ -21,4 +23,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 5000
 
 # Definir el comando para ejecutar la aplicación con Gunicorn
-CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]
+CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:5000", "app:app"]

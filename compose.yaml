@@ -1,8 +1,14 @@
+version: '3.8'
 services:
   web:
     build: .
     ports:
       - "5000:5000"
+    deploy:
+      resources:
+        limits:
+          memory: 2g
+          cpus: "2.0"
     environment:
       - FLASK_ENV=development
     volumes:
