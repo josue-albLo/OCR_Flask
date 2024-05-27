@@ -1,6 +1,6 @@
 
 var users = data_context ? data_context.array_data : [];
-
+var numFiles = document.getElementById("num");
 
 var errorsApi = {
   no_data_provided: "No se proporcionaron datos",

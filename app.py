@@ -146,7 +146,7 @@ def upload_file():
 
         file_size = len(request.files.getlist("myfile"))
 
-        are_multiple_files = file_size > 1 and file_size <= 15
+        are_multiple_files = file_size > 1 and file_size <= 50
         if are_multiple_files:
             files = request.files.getlist("myfile")
             data_from_files, data_errors = load_data_multiple_files(files)
@@ -186,7 +186,7 @@ def upload_file():
                     session["data"] = text_from_img
                     return redirect(url_for("load_file"))
 
-            flash("Error uploading file", "error")
+            flash("Error, limit files allowed is 50", "error")
             return redirect(url_for("load_file"))
     flash("Error uploading file", "error")
     return redirect(url_for("load_file"))
@@ -602,7 +602,21 @@ def process_file(file, extension, data_from_files, data_errors):
         data_errors.append(f"Error uploading file {file.filename}")
 
 
+def timer_decorator(func):
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        print(
+            f"La función {func.__name__} tardó {end_time - start_time} segundos en ejecutarse."
+        )
+        return result
+
+    return wrapper
+
+
 def load_data_multiple_files(files):
+    star_time = time.time()
     data_from_files = []
     data_errors = []
     threads = []
@@ -622,6 +636,10 @@ def load_data_multiple_files(files):
 
     for thread in threads:
         thread.join()
+
+    end_time = time.time()
+    total_time = end_time - star_time
+    print(f"El proceso tardó {total_time:.4f} segundos en ejecutarse.")
 
     return data_from_files, data_errors
 
