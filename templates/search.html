@@ -49,6 +49,14 @@
     <a class="styled-link" href="/search?year={{year}}">{{year}}</a>
     {% endfor %}
   </div>
+  <div>
+    <h4>Filtrar informacion</h4>
+    <a href="/search?year={{year}}&order_by=date_issue">Fecha de generado</a>
+    <a href="/search?year={{year}}&order_by=start_period">Fecha inicio</a>
+    <a href="/search?year={{year}}&order_by=end_period">Fecha fin</a>
+    <a href="/search?year={{year}}&order_by=consumption_kwh">Consumo</a>
+    <a href="/search?year={{year}}&order_by=total_pay">Total a pagar</a>
+  </div>
   {% endif %} {% with errors = get_flashed_messages(category_filter=["error"])
   %} {% if errors %}
   <div class="alert alert-danger">
