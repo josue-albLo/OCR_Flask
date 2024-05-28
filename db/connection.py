@@ -28,9 +28,17 @@ def create_user(data: dict[str, str]):
     db = client["TigerOCR"]
     collection = db["users"]
     try:
-        collection.insert_one(data)
+        result = collection.update_one(
+            {"nis": data["nis"], "start_period": data["start_period"]},
+            {"$setOnInsert": data},
+            upsert=True,
+        )
+        if result.matched_count > 0:
+            return False
+        return True
     except Exception as e:
         print(e)
+        return False
 
 
 def save_image(path_img, nis: str, start_period: str, end_period: str):

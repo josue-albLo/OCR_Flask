@@ -50,6 +50,7 @@
     <a class="styled-link" href="/search?year={{year}}">{{year}}</a>
     {% endfor %}
   </div>
+  {% if context.current_year %}
   <div class="content-table-filter">
     <h4>Filtrar informacion</h4>
     <div class="filter-table">
@@ -60,6 +61,8 @@
     <a href="/search?year={{context.current_year}}&order_by=total_pay">Total a pagar</a>
     </div>
   </div>
+  {% endif %}
+  
   {% endif %} {% with errors = get_flashed_messages(category_filter=["error"])
   %} {% if errors %}
   <div class="alert alert-danger">

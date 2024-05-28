@@ -41,8 +41,9 @@ ONLY_IMAGE_EXTENSIONS = {".png", ".jpg"}
 ONLY_PDF_EXTENSIONS = {".pdf"}
 
 DONT_SAVE_WITHOUT_NIS = "NIS no encontrado"
-ORDER_REGISTERS_BY_DATE = {'start_period', 'end_period', 'date_issue'}
-ORDER_REGISTERS_BY_NUMBER = {'total_pay', 'consumption_kwh'}
+ORDER_REGISTERS_BY_DATE = {"start_period", "end_period", "date_issue"}
+ORDER_REGISTERS_BY_NUMBER = {"total_pay", "consumption_kwh"}
+
 
 def role_required(role):
     def decorator(f):
@@ -356,7 +357,7 @@ def search():
 
     order_by = request.args.get("order_by")
     order_by = order_by.strip() if order_by else "date_issue"
-    
+
     year = request.args.get("year")
     current_year = time.localtime().tm_year
     year = year.strip() if year else current_year
@@ -371,19 +372,24 @@ def search():
     if not users:
         flash("No users found", "error")
         return render_template("search.html", context={"users": []})
-    
-    if order_by not in ORDER_REGISTERS_BY_DATE and order_by not in ORDER_REGISTERS_BY_NUMBER:
+
+    if (
+        order_by not in ORDER_REGISTERS_BY_DATE
+        and order_by not in ORDER_REGISTERS_BY_NUMBER
+    ):
         flash("Error ordering by", "error")
         return render_template("search.html", context={"users": []})
 
     users = operation_order_by(users, order_by)
-   
+
     for user in users:
         user["total_pay"] = f"{float(user['total_pay']):,.2f}"
         user["consumption_kwh"] = f"{float(user['consumption_kwh']):,.2f}"
-    
 
-    return render_template("search.html", context={"users": users, "years": all_years, "current_year": year})
+    return render_template(
+        "search.html",
+        context={"users": users, "years": all_years, "current_year": year},
+    )
 
 
 @app.route("/reports", methods=["GET"])
@@ -574,18 +580,23 @@ def get_text_from_pdf(file, name_file, extension):
 
 def save_on_database(user, nis, start_period, end_period, filename):
     try:
-        path_image = f"uploads/{filename}"
-        connection.save_image(
-            path_img=path_image,
-            nis=nis,
-            start_period=start_period,
-            end_period=end_period,
-        )
-        connection.create_user(user)
 
-        if os.path.exists(path_image):
-            os.remove(path_image)
-        return True
+        is_save = connection.create_user(user)
+
+        if is_save:
+            path_image = f"uploads/{filename}"
+            connection.save_image(
+                path_img=path_image,
+                nis=nis,
+                start_period=start_period,
+                end_period=end_period,
+            )
+
+            if os.path.exists(path_image):
+                os.remove(path_image)
+            return True
+        else:
+            return False
     except Exception as e:
         print(e)
         if os.path.exists(path_image):
@@ -671,14 +682,16 @@ def order_by_date(data, field):
     data = sorted(data, key=lambda x: x[field], reverse=True)
     return data
 
+
 def convert_correct_date(data, field):
     data_processed = order_by_date(data, field)
     for user in data_processed:
         date = user[field].strftime("%d-%m-%Y")
         date = date.split("-")
         user[field] = f"{date[0]}/{date[1]}/{date[2]}"
-    
+
     return data_processed
+
 
 def clean_semicolon(data):
     for user in data:
@@ -688,15 +701,18 @@ def clean_semicolon(data):
         user["consumption_kwh"] = cosumption_kwh.replace(",", "")
     return data
 
+
 def convert_fields_to_number(data, field):
     for user in data:
         user[field] = float(user[field].replace(",", ""))
     return data
 
+
 def order_by_number(data, field):
     data = convert_fields_to_number(data, field)
     data = sorted(data, key=lambda x: x[field], reverse=True)
     return data
+
 
 def operation_order_by(data, order_by):
     if order_by in ORDER_REGISTERS_BY_DATE:
@@ -710,5 +726,13 @@ def operation_order_by(data, order_by):
     else:
         return data
 
+
+def clean_directory():
+    path = "uploads/"
+    for file in os.listdir(path):
+        os.remove(os.path.join(path, file))
+
+
 if __name__ == "__main__":
+    clean_directory()
     app.run()
