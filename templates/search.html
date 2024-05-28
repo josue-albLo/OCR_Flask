@@ -44,18 +44,21 @@
   </section>
 
   {% if context.years %}
+  <h4>Filtrar por año</h4>
   <div class="filter">
     {% for year in context.years %}
     <a class="styled-link" href="/search?year={{year}}">{{year}}</a>
     {% endfor %}
   </div>
-  <div>
+  <div class="content-table-filter">
     <h4>Filtrar informacion</h4>
-    <a href="/search?year={{year}}&order_by=date_issue">Fecha de generado</a>
-    <a href="/search?year={{year}}&order_by=start_period">Fecha inicio</a>
-    <a href="/search?year={{year}}&order_by=end_period">Fecha fin</a>
-    <a href="/search?year={{year}}&order_by=consumption_kwh">Consumo</a>
-    <a href="/search?year={{year}}&order_by=total_pay">Total a pagar</a>
+    <div class="filter-table">
+      <a href="/search?year={{context.current_year}}&order_by=date_issue">Fecha de generado</a>
+    <a href="/search?year={{context.current_year}}&order_by=start_period">Fecha inicio</a>
+    <a href="/search?year={{context.current_year}}&order_by=end_period">Fecha fin</a>
+    <a href="/search?year={{context.current_year}}&order_by=consumption_kwh">Consumo</a>
+    <a href="/search?year={{context.current_year}}&order_by=total_pay">Total a pagar</a>
+    </div>
   </div>
   {% endif %} {% with errors = get_flashed_messages(category_filter=["error"])
   %} {% if errors %}

@@ -383,7 +383,7 @@ def search():
         user["consumption_kwh"] = f"{float(user['consumption_kwh']):,.2f}"
     
 
-    return render_template("search.html", context={"users": users, "years": all_years})
+    return render_template("search.html", context={"users": users, "years": all_years, "current_year": year})
 
 
 @app.route("/reports", methods=["GET"])
