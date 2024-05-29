@@ -14,18 +14,20 @@ def extract(path_file, extension: str):
         return read_image(path_file)
 
 def read_image(path_file):
+    custom_config = r'--oem 3 --psm 6'
     image = process_img.process_image(path_file)
-    text = pytesseract.image_to_string(image)
+    text = pytesseract.image_to_string(image, config=custom_config)
     image.close()
     del image
     gc.collect()
     return text
 
 def read_pdf(path_file):
+    custom_config = r'--oem 3 --psm 6'
     img_list = transform.toImage(path_file)
     text = ""
     for img in img_list:
-        text += pytesseract.image_to_string(img)
+        text += pytesseract.image_to_string(img, config=custom_config)
         img.close()
         del img
         gc.collect()

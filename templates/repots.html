@@ -10,7 +10,7 @@ content %} {% with errors = get_flashed_messages(category_filter=["error"]) %}
 <h1>Descargar todos los usuarios</h1>
 <div class="group-buttons">
   <button class="btn button-primary">
-    <a href="/download/reports" download>Descargar</a>
+    <a href="{{ url_for('static', filename='reports/'+context.file_name)}}" download>Descargar</a>
   </button>
   <button class="btn button-back"><a href="/index">Regresar</a></button>
 </div>

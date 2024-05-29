@@ -184,7 +184,6 @@ def get_user_by_nis(nis: str, start_period: str = "0", end_period: str = "0"):
         user = collection.find_one(
             {"nis": nis, "start_period": start_period, "end_period": end_period}
         )
-        print(user)
         return user
     except Exception as e:
         print(e)

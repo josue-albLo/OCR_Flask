@@ -7,9 +7,13 @@ services:
     deploy:
       resources:
         limits:
-          memory: 2g
+          memory: 4g  # Incrementado a 4GB
           cpus: "2.0"
+        reservations:
+          memory: 2g  # Incrementado a 2GB
+          cpus: "1.0"
     environment:
       - FLASK_ENV=development
     volumes:
       - .:/app
+    restart: always

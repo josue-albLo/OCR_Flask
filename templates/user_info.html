@@ -11,7 +11,7 @@
       <p>Total a pagar: <span>Q.{{context.total_pay}}</span></p>
     </div>
     <figure class="right-side">
-      <img class="imagen-hover" src="/mostrar_imagen_temporal" alt="{{context.nis}}" />
+      <img class="imagen-hover" src="{{ url_for('static', filename='images/'+context.name_image)}}" alt="{{context.nis}}" />
     </figure>
   </article>
   {% with errors = get_flashed_messages(category_filter=["error"]) %}
@@ -25,8 +25,8 @@
 {% endwith %}
 <div class="group-buttons">
   <button class="btn button-back"><a href="/search">Regresar</a></button>
-  <button class="btn download"><a  href="/mostrar_imagen_temporal" download>Descargar</a></button>
-  <button class="btn button-primary"><a  href="/mostrar_imagen_temporal">Ver en grande</a></button>
+  <button class="btn download"><a  href="{{ url_for('static', filename='images/'+context.name_image)}}" download>Descargar</a></button>
+  <button class="btn button-primary"><a  href="{{ url_for('static', filename='images/'+context.name_image)}}">Ver en grande</a></button>
   
 </div>
   

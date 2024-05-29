@@ -23,6 +23,7 @@ from flask_cors import CORS
 import time
 import threading
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 
 app = Flask(__name__)
@@ -107,6 +108,7 @@ def logout():
 @login_required
 @role_required("admin")
 def index():
+    clean_directory()
     current_year = time.localtime().tm_year
     year = request.args.get("year")
     year = year.strip() if year else current_year
@@ -144,6 +146,7 @@ path_name_to_extract = None
 @app.route("/upload", methods=["POST"])
 @login_required
 def upload_file():
+    clean_directory()
     if request.method == "POST":
         uploaded_file = request.files["myfile"]
 
@@ -270,7 +273,8 @@ def delete_user(id, start_period, end_period):
 @login_required
 @role_required("admin")
 def user_info(id, start_period, end_period):
-    path_image = "uploads/temp_image.png"
+    clean_directory()
+    name_file = f"{id}_{start_period}_{end_period}.png".replace("-", "_")
     start_period = start_period.replace("-", "/")
     end_period = end_period.replace("-", "/")
     cleanup_file("temp_image.png")
@@ -294,18 +298,13 @@ def user_info(id, start_period, end_period):
     img_bytes = BytesIO()
     image.save(img_bytes, format="JPEG")
     image = img_bytes.getvalue()
-
+    path_image = f"static/images/{name_file}"
     with open(path_image, "wb") as f:
         f.write(image)
 
-    return render_template("user_info.html", context={**user, "image": "none"})
-
-
-@app.route("/mostrar_imagen_temporal")
-@login_required
-@role_required("admin")
-def mostrar_imagen_temporal():
-    return send_from_directory("uploads/", "temp_image.png")
+    return render_template(
+        "user_info.html", context={**user, "image": "none", "name_image": name_file}
+    )
 
 
 @app.route("/", methods=["GET"])
@@ -317,6 +316,7 @@ def init():
 @login_required
 @role_required("admin")
 def search_user():
+    clean_directory()
     if request.method == "POST":
 
         if not request.form["search"]:
@@ -354,7 +354,7 @@ def search_user():
 @login_required
 @role_required("admin")
 def search():
-
+    clean_directory()
     order_by = request.args.get("order_by")
     order_by = order_by.strip() if order_by else "date_issue"
 
@@ -396,8 +396,14 @@ def search():
 @login_required
 @role_required("admin")
 def reports():
+    clean_directory()
     # generate excel  to download
     all_users = connection.getAllUsers()
+    current_date = datetime.now().strftime("%d-%m-%Y")
+    name_file = f"reports_{current_date}.xlsx"
+    if not all_users:
+        flash("No users found", "error")
+        return render_template("repots.html")
 
     df = pd.DataFrame(all_users)
     df.columns = [
@@ -416,7 +422,7 @@ def reports():
     )
 
     df["NIS Number"] = df["NIS Number"].apply(lambda x: str(x))
-    path_xlsx = f"uploads/reports.xlsx"
+    path_xlsx = f"static/reports/{name_file}"
 
     if os.path.exists(path_xlsx):
         os.remove(path_xlsx)
@@ -424,18 +430,7 @@ def reports():
     with pd.ExcelWriter(path_xlsx) as writer:
         df.to_excel(writer, sheet_name="Users", index=False)
 
-    return render_template("repots.html")
-
-
-@app.route("/download/reports", methods=["GET"])
-@login_required
-@role_required("admin")
-def download_reports():
-    path_xlsx = "uploads/reports.xlsx"
-    if os.path.exists(path_xlsx):
-        return send_from_directory("uploads", "reports.xlsx")
-    flash("Error downloading file", "error")
-    return redirect(url_for("reports"))
+    return render_template("repots.html", context={"file_name": name_file})
 
 
 @app.route("/loadfile", methods=["GET"])
@@ -637,29 +632,36 @@ def timer_decorator(func):
 
 
 def load_data_multiple_files(files):
-    star_time = time.time()
+    start_time = time.time()
     data_from_files = []
     data_errors = []
-    threads = []
 
-    for file in files:
-        _, extension = os.path.splitext(file.filename)
+    # Define el número máximo de hilos que quieres usar
+    max_workers = 8
 
-        if extension not in ALLOWED_EXTENSIONS:
-            flash(f"File not allowed {file.name}", "error")
-            return redirect(url_for("load_file"))
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        future_to_file = {
+            executor.submit(
+                process_file,
+                file,
+                os.path.splitext(file.filename)[1],
+                data_from_files,
+                data_errors,
+            ): file
+            for file in files
+        }
 
-        thread = threading.Thread(
-            target=process_file, args=(file, extension, data_from_files, data_errors)
-        )
-        threads.append(thread)
-        thread.start()
-
-    for thread in threads:
-        thread.join()
+        for future in as_completed(future_to_file):
+            file = future_to_file[future]
+            try:
+                future.result()
+            except Exception as exc:
+                data_errors.append(f"Error processing file {file.name}: {exc}")
+                flash(f"Error processing file {file.name}", "error")
+                return redirect(url_for("load_file"))
 
     end_time = time.time()
-    total_time = end_time - star_time
+    total_time = end_time - start_time
     print(f"El proceso tardó {total_time:.4f} segundos en ejecutarse.")
 
     return data_from_files, data_errors
@@ -729,8 +731,14 @@ def operation_order_by(data, order_by):
 
 def clean_directory():
     path = "uploads/"
+    path_images = "static/images/"
+    path_reports = "static/reports/"
     for file in os.listdir(path):
         os.remove(os.path.join(path, file))
+    for file in os.listdir(path_images):
+        os.remove(os.path.join(path_images, file))
+    for file in os.listdir(path_reports):
+        os.remove(os.path.join(path_reports, file))
 
 
 if __name__ == "__main__":
