@@ -50,6 +50,9 @@
     <a class="styled-link" href="/search?year={{year}}">{{year}}</a>
     {% endfor %}
   </div>
+  
+  {% endif %} 
+  
   {% if context.current_year %}
   <div class="content-table-filter">
     <h4>Filtrar informacion</h4>
@@ -62,8 +65,7 @@
     </div>
   </div>
   {% endif %}
-  
-  {% endif %} {% with errors = get_flashed_messages(category_filter=["error"])
+  {% with errors = get_flashed_messages(category_filter=["error"])
   %} {% if errors %}
   <div class="alert alert-danger">
     {% for msg in errors %}
@@ -76,7 +78,7 @@
     </caption>
     <thead>
       <tr class="table-header">
-        
+        <th class="">No.</th>
         <th class="">NIS</th>
         <th class="">Fecha de emisi&oacute;n</th>
         <th class="">Consumo de KWh</th>
@@ -89,6 +91,7 @@
     <tbody>
       {% for user in context.users %}
       <tr>
+        <td>{{loop.index}}</td>
         <td>{{user.nis}}</td>
         <td>{{user.date_issue}}</td>
         <td>{{user.consumption_kwh}}</td>

@@ -657,6 +657,20 @@ canvas {
   text-align: center;
   cursor: pointer;
 }
+
+.drop-area ul{
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.drop-area ul li {
+  background: #f0f0f0;
+  border-radius: 5px;
+  padding: 5px 10px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
 .drop-area.dragover {
   background-color: #f0f0f0;
 }

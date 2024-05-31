@@ -5,6 +5,7 @@ import gc
 
 ALLOWED_EXTENSIONS = {".pdf", ".png", ".jpg"}
 
+
 def extract(path_file, extension: str):
     if extension not in ALLOWED_EXTENSIONS:
         return "File not allowed"
@@ -14,20 +15,22 @@ def extract(path_file, extension: str):
         return read_image(path_file)
 
 def read_image(path_file):
-    custom_config = r'--oem 3 --psm 6'
+    
     image = process_img.process_image(path_file)
-    text = pytesseract.image_to_string(image, config=custom_config)
-    image.close()
-    del image
-    gc.collect()
-    return text
+    if image is not None:
+        text = pytesseract.image_to_string(image)
+        image.close()
+        del image
+        gc.collect()
+        return text
+    else:
+        return "Error in image processing"
 
 def read_pdf(path_file):
-    custom_config = r'--oem 3 --psm 6'
     img_list = transform.toImage(path_file)
     text = ""
     for img in img_list:
-        text += pytesseract.image_to_string(img, config=custom_config)
+        text += pytesseract.image_to_string(img)
         img.close()
         del img
         gc.collect()

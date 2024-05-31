@@ -274,10 +274,9 @@ def delete_user(id, start_period, end_period):
 @role_required("admin")
 def user_info(id, start_period, end_period):
     clean_directory()
-    name_file = f"{id}_{start_period}_{end_period}.png".replace("-", "_")
+    name_file = f"{id}_{start_period}_{end_period}.jpg".replace("-", "_")
     start_period = start_period.replace("-", "/")
     end_period = end_period.replace("-", "/")
-    cleanup_file("temp_image.png")
 
     user = connection.get_user_by_nis(id, start_period, end_period)
 
@@ -537,16 +536,14 @@ def is_valid_user(user):
 
 
 def get_text_from_image(file, extension):
+    print("get_text_from_image", file.filename)
     path_file = "uploads/" + file.filename
     file.save(path_file)
     text = ocr.extract(path_file, extension)
     result = regex_fields.get_important_fields(text)
+    print("result", result)
     if not is_valid_user(result):
         os.remove(path_file)
-        flash(
-            f"User is invild some fields are wrong, this is the file: {file.filename}",
-            "error",
-        )
         return None
     return {**result, "file_name": file.filename}
 
@@ -618,19 +615,6 @@ def process_file(file, extension, data_from_files, data_errors):
         data_errors.append(f"Error uploading file {file.filename}")
 
 
-def timer_decorator(func):
-    def wrapper(*args, **kwargs):
-        start_time = time.time()
-        result = func(*args, **kwargs)
-        end_time = time.time()
-        print(
-            f"La función {func.__name__} tardó {end_time - start_time} segundos en ejecutarse."
-        )
-        return result
-
-    return wrapper
-
-
 def load_data_multiple_files(files):
     start_time = time.time()
     data_from_files = []
@@ -656,9 +640,8 @@ def load_data_multiple_files(files):
             try:
                 future.result()
             except Exception as exc:
-                data_errors.append(f"Error processing file {file.name}: {exc}")
-                flash(f"Error processing file {file.name}", "error")
-                return redirect(url_for("load_file"))
+                print(f"Error processing file {file.filename}: {exc}")
+                data_errors.append(f"Error processing file {file.filename}")
 
     end_time = time.time()
     total_time = end_time - start_time
