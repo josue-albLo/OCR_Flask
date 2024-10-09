@@ -1,7 +1,7 @@
 import re
 
 nis = re.compile(r"NIR\s*:\s*0\.(\d+)")
-fecha_emision = re.compile(r"Fecha\s*de\s*Emisi[oOÓÉé6]*n:\s*(\d{2}/\d{2}/\d{4})")
+fecha_emision = re.compile(r"Fecha\s*de\s*Emisi[oóOÓÉé6]*n:\s*(\d{2}/\d{2}/\d{4})")
 consumo_electricidad = re.compile(r"\s*(\d+)\s*KWh")
 periodo_lectura = re.compile(
     r"PERIODO DE LECTURA: (\d{2}/\d{2}/202\d) al (\d{2}/\d{2}/202\d)"

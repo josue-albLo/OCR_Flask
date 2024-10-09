@@ -17,7 +17,7 @@ var responseApi = {
 console.log(users);
 
 function init() {
-  if (users.length > 1) {
+  if (users.length > 0) {
     const container = document.getElementById("user-container");
     container.className = "container-mult-data";
     users.forEach((user, index) => {

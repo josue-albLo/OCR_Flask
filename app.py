@@ -540,6 +540,7 @@ def get_text_from_image(file, extension):
     path_file = "uploads/" + file.filename
     file.save(path_file)
     text = ocr.extract(path_file, extension)
+    print("text", text)
     result = regex_fields.get_important_fields(text)
     print("result", result)
     if not is_valid_user(result):
@@ -558,7 +559,10 @@ def get_text_from_pdf(file, name_file, extension):
         image[0].save(f, "JPEG")
 
     text = ocr.extract(path_file, extension)
+    print("text", text)
+
     result = regex_fields.get_important_fields(text)
+    print("result", result)
     if not is_valid_user(result):
         if os.path.exists(path_file) or os.path.exists(path_image):
             os.remove(path_file)
@@ -726,4 +730,4 @@ def clean_directory():
 
 if __name__ == "__main__":
     clean_directory()
-    app.run()
+    app.run(debug=False)
